@@ -73,9 +73,9 @@ Data <- function(input, output, session,data) {
           scroll = FALSE,
           buttons = list(
             list(extend = 'copy'),
-            list(extend = 'csv', filename =  paste0(Sys.Date(),"Iati_Projects_Resume"), title = NULL, header = TRUE),
-	          list(extend = 'excel', filename =  paste0(Sys.Date(),"Iati_Projects_Resume"), title = NULL, header = TRUE),
-            list(extend = "pdf", filename = paste0(Sys.Date(),"Iati_Projects_Resume"), title = "Iati_Projects_Resume", header = TRUE),
+            list(extend = 'csv', filename =  paste0(Sys.Date(),"Iati_Projects_Summary"), title = NULL, header = TRUE),
+	          list(extend = 'excel', filename =  paste0(Sys.Date(),"Iati_Projects_Summary"), title = NULL, header = TRUE),
+            list(extend = "pdf", filename = paste0(Sys.Date(),"Iati_Projects_Summary"), title = "Iati_Projects_Summary", header = TRUE),
             list(extend = 'print')
 	),
 	exportOptions = list(
