@@ -1,0 +1,17 @@
+query<-list()
+query$pid="fao_iati_projects_dbquery_adv"
+query$layer="fao_iati_projects_dbquery_adv_layer"
+query$csw_server="https://geonetwork-sdi-lab.d4science.org/geonetwork/srv/eng/csw"
+query$csw_version="2.0.2"
+query$wfs_server="https://geoserver-sdi-lab.d4science.org/geoserver/sdilab_fisheriesatlas/ows"
+query$wfs_version="1.0.0"
+query$feature_geom="true"
+query$wms_server=NULL
+query$wms_version=NULL
+query$strategy="ogc_viewparams"
+query$par="aggregation_method:none_withgeom"
+query$x=NULL
+query$y=NULL
+query$srs="EPSG:4326"
+query$dsd="%5B%7B%22name%22:%22Countries%22,%22definition%22:%22Countries%22,%22primitiveCode%22:%22country_iso3_code%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Sectors%22,%22definition%22:%22Sectors%22,%22primitiveCode%22:%22sector_code%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Regions%22,%22definition%22:%22Region%22,%22primitiveCode%22:%22region%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Funder%22,%22definition%22:%22Funder%22,%22primitiveCode%22:%22participating_org_funding%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Status%22,%22definition%22:%22Status%22,%22primitiveCode%22:%22status%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Start%20Date%22,%22definition%22:%22Date%20of%20Start%22,%22primitiveCode%22:%22start_date%22,%22primitiveType%22:%22xsd:date%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:1,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22End%20Date%22,%22definition%22:%22Date%20of%20End%22,%22primitiveCode%22:%22end_date%22,%22primitiveType%22:%22xsd:date%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:1,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Budget%22,%22definition%22:%22Budget%20in%20USD%22,%22primitiveCode%22:%22budget_usd%22,%22primitiveType%22:%22xsd:decimal%22,%22columnType%22:%22variable%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:%22USD%22,%22uomLabel%22:%7B%22length%22:0,%22prevObject%22:%7B%220%22:%7B%7D,%22length%22:1,%22prevObject%22:%7B%220%22:%7B%7D,%22context%22:%7B%7D,%22length%22:1%7D,%22context%22:%7B%7D%7D,%22context%22:%7B%7D%7D%7D,%7B%22name%22:%22Number%20of%20Projects%22,%22definition%22:%22Number%20of%20Projects%22,%22primitiveCode%22:%22nb_projects%22,%22primitiveType%22:%22xsd:decimal%22,%22columnType%22:%22variable%22,%22minOccurs%22:0,%22maxOccurs%22:1,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22geometry%22,%22definition%22:null,%22primitiveCode%22:%22geometry%22,%22primitiveType%22:%22gml:MultiPolygonPropertyType%22,%22columnType%22:%22attribute%22,%22minOccurs%22:0,%22maxOccurs%22:null,%22uom%22:null,%22uomLabel%22:null%7D,%7B%22name%22:%22Aggregation%20method%22,%22definition%22:%22Method%20of%20aggregation%22,%22primitiveCode%22:%22aggregation_method%22,%22primitiveType%22:%22xsd:string%22,%22columnType%22:%22attribute%22,%22minOccurs%22:1,%22maxOccurs%22:1,%22uom%22:null,%22uomLabel%22:null%7D%5D"
+query
