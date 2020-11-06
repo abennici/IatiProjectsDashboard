@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 # install dependencies of the IatiProjectsDashboard app
 RUN R -e "install.packages(c('devtools'), repos='https://cran.r-project.org/')"
 RUN R -e "devtools::install_version('XML', version='3.99-0.3', repos = 'http://cran.r-project.org')"
-RUN R -e "install.packages(c('ows4R','sp','sf','shiny','shinydashboard','DT','stringr','shinyWidgets','shinycssloaders','jsonlite','leaflet','ggplot2','plotly','plyr','shinyjs','shinybusy','paletteer','data.table','remotes'), repos='http://cran.r-project.org')"
+RUN R -e "install.packages(c('sp','sf','shiny','shinydashboard','DT','stringr','shinyWidgets','shinycssloaders','jsonlite','leaflet','ggplot2','plotly','plyr','shinyjs','shinybusy','paletteer','data.table','remotes'), repos='http://cran.r-project.org')"
 
 RUN R -e "remotes::install_github('eblondel/ows4R')"
 
