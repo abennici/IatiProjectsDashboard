@@ -7,7 +7,7 @@
    sidebarMenu(id="sidebarmenu",
     menuItem("Summary", tabName = "Summary"),
     menuItem("Data", tabName = "Data"),
-    menuItem("Country", tabName = "Country")
+    menuItem("By Country", tabName = "By_Country")
   #  menuItem("Region", tabName = "Region", icon = icon("bar-chart-o"))
    )
  )
@@ -18,7 +18,7 @@
      tabItems(
      tabItem(tabName = "Summary",SummaryUI(id = "summary")),
      tabItem(tabName = "Data",DataUI(id = "data")),
-     tabItem(tabName = "Country",CountryUI(id = "country"))
+     tabItem(tabName = "By_Country",CountryUI(id = "country"))
      #tabItem(tabName = "Region",ResumeUI(id = "region"))
        )
    )

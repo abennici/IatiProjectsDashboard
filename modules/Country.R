@@ -3,17 +3,18 @@
 CountryUI <- function(id) {
   ns <- NS(id)
   
-  tabPanel("Country", 
+  tabPanel("By_Country", 
            fluidPage(
-             fluidRow(
-               column(8,leafletOutput(ns("map")),offset = 2)
+             fluidRow("Please click on a country for show more information",
+               column(width=6,leafletOutput(ns("map"),height = "350px")),
+               column(width=6,
+                      plotOutput(ns("plot1"),height = "170px"),
+                      plotOutput(ns("plot2"),height = "170px"))
                ),
              hr(),
              fluidRow(
-               column(4,plotlyOutput(ns("cnty"),height = "250px")),
-               column(4,plotOutput(ns("plot1"),height = "250px")),
-               column(4,plotOutput(ns("plot2"),height = "250px"))
-             )
+               plotlyOutput(ns("gantt"))
+                       )
            )
   )           
 }
@@ -118,7 +119,7 @@ Country <- function(input, output, session,data) {
         
         fig <- fig %>% layout(annotations = a) 
         fig <- fig %>% layout(annotations = b)
-        output$cnty <- renderPlotly(fig)
+        output$gantt <- renderPlotly(fig)
         
         
         rv$myDf$st_year<-as.integer(substring(rv$myDf$start_date,1,4))
@@ -142,7 +143,7 @@ Country <- function(input, output, session,data) {
         output$plot1<-renderPlot({plot1})
         output$plot2<-renderPlot({plot2})
         
-      }else{output$cnty <- renderPlotly(NULL)
+      }else{output$gantt <- renderPlotly(NULL)
       output$plot1<-renderPlot({NULL})
       output$plot2<-renderPlot({NULL})}
       
