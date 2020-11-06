@@ -44,12 +44,11 @@ Country <- function(input, output, session,data) {
     
     observeEvent(input$map_shape_click, { 
       event <- input$map_shape_click
-      #df <- read.csv("https://cdn.rawgit.com/plotly/datasets/master/GanttChart-updated.csv", stringsAsFactors = F)
       rv$myDf<-as.data.frame(data()[c("country_iso3_code","iati_identifier","sector_code","start_date","end_date","budget_usd")][data()$country_iso3_code == event$id,])
       # Convert to dates
       
       if(nrow(rv$myDf)>0){
-        # Sample client name
+        
         flag = unique(rv$myDf$country_iso3_code)
         
         
@@ -58,8 +57,8 @@ Country <- function(input, output, session,data) {
         
         for(i in 1:(nrow(rv$myDf))){
           fig <- add_trace(fig,
-                           x = c(rv$myDf$start_date[i], rv$myDf$end_date[i]),  # x0, x1
-                           y = c(i, i),  # y0, y1
+                           x = c(rv$myDf$start_date[i], rv$myDf$end_date[i]),  
+                           y = c(i, i),  
                            mode = "lines",
                            line = list(width = 20),
                            showlegend = F,

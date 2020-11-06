@@ -1,0 +1,3 @@
+wget https://raw.githubusercontent.com/abennici/IatiProjectsDashboard/main/Dockerfile 
+docker build -t iatiprojectsdashboard .
+docker run -p 3839:3838 iatiprojectsdashboard

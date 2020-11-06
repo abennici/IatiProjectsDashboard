@@ -6,7 +6,7 @@ SummaryUI <- function(id) {
   tabPanel("Data", 
            fluidPage(
                 fluidRow(infoBoxOutput(ns("nb_project"),width=3),infoBoxOutput(ns("nb_country"),width=3),infoBoxOutput(ns("nb_budget"),width=3),infoBoxOutput(ns("nb_funder"),width=3)),
-                #hr(),    
+                    
                 fluidRow(
                       column(4,plotOutput(ns("plot1"),height = "230px")),
                       column(4,plotOutput(ns("plot2"),height = "230px")),
@@ -14,22 +14,15 @@ SummaryUI <- function(id) {
                       ),
                 hr(),
                 
-            fluidRow(
-               column(4,plotOutput(ns("plot4"),height = "270px")),
-               column(4,plotOutput(ns("plot5"),height = "270px")),
-               column(4,plotOutput(ns("plot6"),height = "270px"))
-               ),
+                fluidRow(
+                      column(4,plotOutput(ns("plot4"),height = "270px")),
+                      column(4,plotOutput(ns("plot5"),height = "270px")),
+                      column(4,plotOutput(ns("plot6"),height = "270px"))
+                      )
               
-              # fluidRow(
-              #  # column(6,leafletOutput(ns("map"))),
-              #   column(6,htmlOutput(ns("text")))),
-                
-         
-             
            )       
   )
-  
-          
+ 
   
 }
 
@@ -81,7 +74,6 @@ Summary <- function(input, output, session,data) {
     })
 
     tab<-data[c("region","country_iso3_code","sector_code","language","iati_identifier","title","status")]
-  #  tab$title<-ifelse(tab$title=="NA","(not know)",paste(substring(as.character(tab$title),1,50),"..."))
     names(tab)<-c("Region","Country","Sector","Language","ID","Title","Status")
     
     data$st_year<-as.integer(substring(data$start_date,1,4))
@@ -226,12 +218,6 @@ Summary <- function(input, output, session,data) {
    output$plot5<-renderPlot({top_budget})
    output$plot6<-renderPlot({top_funder})
  
-   # map <- leaflet() %>%
-   #        addTiles() %>%
-   #        addPolygons()
-   # 
-   # output$map <- renderLeaflet({map})
-
-})
+ })
 }
 ####

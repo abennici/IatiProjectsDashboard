@@ -53,7 +53,6 @@ Data <- function(input, output, session,data) {
         #width='80%',
         id = 'button_',
         label = "Show detail",
-        # onclick = 'Shiny.onInputChange(\"lastClick\",  this.id)'
         onclick = paste0('Shiny.onInputChange(\"' , ns("select_button"), '\", this.id)')
       )
     )
