@@ -39,11 +39,34 @@ Country <- function(input, output, session,data) {
         addPolygons(data=st_as_sf(test),
                     fillColor ="grey",
                     color="grey",
-                    layerId=~country_iso3_code)
+                    layerId=~country_iso3_code,
+                    highlightOptions = highlightOptions(color = "white",
+                                                        weight = 2,
+                                                        bringToFront = TRUE))
     })
     
     observeEvent(input$map_shape_click, { 
+      proxy <- leafletProxy("map")
       event <- input$map_shape_click
+      sel_lines <- data()[data()$country_iso3_code == event$id,]
+      unsel_lines<- data()[data()$country_iso3_code != event$id,]
+      # Remove layer based on clicked-ID
+    #  proxy %>% removeShape(layerId = event$id)
+      proxy %>% clearShapes()
+      # Add Filtered Lines
+     proxy %>% addPolygons(data = st_as_sf(unsel_lines),
+                     layerId = ~country_iso3_code,
+                     color="grey", weight=5,opacity=1,
+                     highlightOptions = highlightOptions(color = "white",
+                                                         weight = 2,
+                                                         bringToFront = TRUE))%>%
+               addPolygons(data = st_as_sf(sel_lines),
+                    layerId = ~country_iso3_code,
+                    color="orange", weight=5,opacity=1,
+                    highlightOptions = highlightOptions(color = "white",
+                                                        weight = 2,
+                                                        bringToFront = TRUE))
+     
       rv$myDf<-as.data.frame(data()[c("country_iso3_code","iati_identifier","sector_code","start_date","end_date","budget_usd")][data()$country_iso3_code == event$id,])
       # Convert to dates
       
