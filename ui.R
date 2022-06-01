@@ -13,7 +13,7 @@
  )
 
  body <- dashboardBody(
-    tags$head(tags$style(HTML('.info-box {min-height: 50px;} .info-box-icon {height: 50px; line-height: 50px;} .info-box-content {padding-top: 0px; padding-bottom: 0px;}'))),
+    tags$head(tags$style(HTML('.info-box {min-height: 40px;} .info-box-icon {height: 40px; line-height: 50px;} .info-box-content {padding-top: 0px; padding-bottom: 0px;}'))),
     
      tabItems(
      tabItem(tabName = "Summary",SummaryUI(id = "summary")),
