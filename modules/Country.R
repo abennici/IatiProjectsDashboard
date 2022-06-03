@@ -28,7 +28,7 @@ Country <- function(input, output, session,data) {
   observe({
     ###Reformat
     test<-as.data.frame(data())
-    test<-ddply(test,.(country_iso3_code),summarise,project=length(iati_identifier))
+    test<-ddply(test,.(country_iso3_code),summarise,project=length(other_identifier_ref))
     test<-merge(test,unique(data()[c("geometry","country_iso3_code")]),all.x=T,all.y=F)
     head(test)
     
@@ -67,20 +67,21 @@ Country <- function(input, output, session,data) {
                                                         weight = 2,
                                                         bringToFront = TRUE))
      
-      rv$myDf<-as.data.frame(data()[c("country_iso3_code","iati_identifier","sector_code","start_date","end_date","budget_usd")][data()$country_iso3_code == event$id,])
+      rv$myDf<-as.data.frame(data()[c("country_iso3_code","other_identifier_ref","sector_code","activity_start_date","activity_end_date","budget_value")][data()$country_iso3_code == event$id,])
       # Convert to dates
       
       if(nrow(rv$myDf)>0){
         
         flag = unique(rv$myDf$country_iso3_code)
-        
+        rv$myDf<-unique(rv$myDf)
+        print(rv$myDf)
         
         # Initialize empty plot
         fig <- plot_ly()
         
         for(i in 1:(nrow(rv$myDf))){
           fig <- add_trace(fig,
-                           x = c(rv$myDf$start_date[i], rv$myDf$end_date[i]),  
+                           x = c(rv$myDf$activity_start_date[i], rv$myDf$activity_end_date[i]),  
                            y = c(i, i),  
                            mode = "lines",
                            line = list(width = 20),
@@ -89,8 +90,8 @@ Country <- function(input, output, session,data) {
                            
                            # Create custom hover text
                            
-                           text = paste("ID: ", rv$myDf$iati_identifier[i], "<br>",
-                                        "Duration: ", rv$myDf$end_date[i]-rv$myDf$start_date[i], "days<br>",
+                           text = paste("ID: ", rv$myDf$other_identifier_ref[i], "<br>",
+                                        "Duration: ", rv$myDf$activity_end_date[i]-rv$myDf$activity_start_date[i], "days<br>",
                                         "Sector: ", rv$myDf$sector_code[i]),
                            
                            evaluate = T  # needed to avoid lazy loading
@@ -106,7 +107,7 @@ Country <- function(input, output, session,data) {
                       xaxis = list(showgrid = F, tickfont = list(color = "#333333")),
                       
                       yaxis = list(showgrid = F, tickfont = list(color = "#333333"),
-                                   tickmode = "array", tickvals = 1:nrow(rv$myDf), ticktext = unique(rv$myDf$iati_identifier),
+                                   tickmode = "array", tickvals = 1:nrow(rv$myDf), ticktext = rv$myDf$other_identifier_ref,
                                    domain = c(0, 0.9))
                       
                       # plot_bgcolor = "#333333",  # Chart area color
@@ -117,8 +118,8 @@ Country <- function(input, output, session,data) {
                   yref = "paper",
                   x = 0.80,
                   y = 0.1,
-                  text = paste0("Total Duration: ", sum(rv$myDf$end_date-rv$myDf$start_date), " days<br>",
-                                "Total Projects: ", length(unique(rv$myDf$iati_identifier)), "<br>"),
+                  text = paste0("Total Duration: ", sum(rv$myDf$activity_end_date-rv$myDf$activity_start_date), " days<br>",
+                                "Total Projects: ", length(unique(rv$myDf$other_identifier_ref)), "<br>"),
                   font = list(color = '#264E86', size = 12),
                   ax = 0,
                   ay = 0,
@@ -144,8 +145,8 @@ Country <- function(input, output, session,data) {
         output$gantt <- renderPlotly(fig)
         
         
-        rv$myDf$st_year<-as.integer(substring(rv$myDf$start_date,1,4))
-        cumul<-ddply(rv$myDf,.(st_year),summarise,new_project=length(iati_identifier),budget=sum(budget_usd))
+        rv$myDf$st_year<-as.integer(substring(rv$myDf$activity_start_date,1,4))
+        cumul<-ddply(rv$myDf,.(st_year),summarise,new_project=length(other_identifier_ref),budget=sum(budget_value))
         cumul$cumul_new_project<-cumsum(cumul$new_project)
         cumul$cumul_budget<-cumsum(cumul$budget)
         

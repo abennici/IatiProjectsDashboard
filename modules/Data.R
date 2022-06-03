@@ -38,17 +38,17 @@ Data <- function(input, output, session,data) {
     data<-as.data.frame(data())
     vals$Data2<-data
     vals$Data <- data.table(
-      Region =data$region,
+      Region =data$rgeoregion_id,
       Country =data$country_iso3_code,
       Sector = data$sector_code,
-      Language = data$language,
-      Identifier = data$iati_identifier,
-      Title = ifelse(data$title=="NA","(not available)",paste(substring(as.character(iconv(data$title, to = "UTF-8")),1,70),"...")),
-      Status = data$status,
+      Language = data$description_narrative_xml_lang,
+      Identifier = data$other_identifier_ref,
+      Title = ifelse(data$title_narrative=="NA","(not available)",paste(substring(as.character(iconv(data$title_narrative, to = "UTF-8")),1,70),"...")),
+      Status = data$activity_status_code,
       
       'More informations' = buttonInput(
         FUN = actionButton,
-        len = length(data$iati_identifier),
+        len = length(data$other_identifier_ref),
         style='padding:4px; font-size:80%;width:80%',
         #width='80%',
         id = 'button_',
@@ -86,19 +86,17 @@ Data <- function(input, output, session,data) {
     
     observeEvent(input$select_button, {
       selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
-      printText$title <<- paste('<b>Title :</b><br/> ',iconv(vals$Data2[selectedRow,"title"], to = "UTF-8"))
-      printText$desc <<- paste('<b>Description :</b><br/> ',iconv(vals$Data2[selectedRow,"description"], to = "UTF-8"))
-      printText$result <<- paste('<b>Result :</b><br/> ',ifelse(is.na(vals$Data2[selectedRow,"result"])|vals$Data2[selectedRow,"result"]=="NA","<i>information not available</i>",
-                                                                iconv(vals$Data2[selectedRow,"result"], to = "UTF-8")))
-      printText$budget <<- paste('<b>Budget :</b> ',vals$Data2[selectedRow,"budget_usd"],"$")
-      printText$funder <<- paste('<b>Funder :</b> ',vals$Data2[selectedRow,"participating_org_funding"])
-      printText$duration <<- paste('<b>Start :</b> ',as.character(vals$Data2[selectedRow,"start_date"]), ' <b>End :</b> ',as.character(vals$Data2[selectedRow,"end_date"]))
-      printText$status <<- paste('<b>Status :</b> ',vals$Data2[selectedRow,"status"])
+      printText$title <<- paste('<b>Title :</b><br/> ',iconv(vals$Data2[selectedRow,"title_narrative"], to = "UTF-8"))
+      printText$desc <<- paste('<b>Description :</b><br/> ',iconv(vals$Data2[selectedRow,"description_narrative"], to = "UTF-8"))
+      printText$budget <<- paste('<b>Budget :</b> ',vals$Data2[selectedRow,"budget_value"],"$")
+      printText$sector <<- paste('<b>Sector :</b> ',vals$Data2[selectedRow,"sector_code"])
+      printText$duration <<- paste('<b>Start :</b> ',as.character(vals$Data2[selectedRow,"activity_start_date"]), ' <b>End :</b> ',as.character(vals$Data2[selectedRow,"activity_end_date"]))
+      printText$status <<- paste('<b>Status :</b> ',vals$Data2[selectedRow,"activity_status_code"])
       if (is.null(selectedRow) || selectedRow == '') {} else{
         
         showModal(modalDialog(
           title = "Summary of Project",
-          HTML(paste(printText$title,printText$desc,printText$result,printText$budget,printText$funder, printText$duration,printText$status,sep ="<br/>")),
+          HTML(paste(printText$title,printText$desc,printText$budget,printText$sector, printText$duration,printText$status,sep ="<br/>")),
           size = "m",
           easyClose = TRUE,
           footer = NULL

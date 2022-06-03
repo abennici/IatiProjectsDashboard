@@ -5,7 +5,7 @@ SummaryUI <- function(id) {
 
   tabPanel("Data", 
            fluidPage(
-                fluidRow(infoBoxOutput(ns("nb_project"),width=3),infoBoxOutput(ns("nb_country"),width=3),infoBoxOutput(ns("nb_budget"),width=3),infoBoxOutput(ns("nb_funder"),width=3)),
+                fluidRow(infoBoxOutput(ns("nb_project"),width=3),infoBoxOutput(ns("nb_sector"),width=3),infoBoxOutput(ns("nb_country"),width=3),infoBoxOutput(ns("nb_budget"),width=3)),
                     
                 fluidRow(
                       column(4,plotOutput(ns("plot1"),height = "230px")),
@@ -37,10 +37,10 @@ Summary <- function(input, output, session,data) {
     
    
   #Register
-    nb_project<-length(unique(data$iati_identifier))
+    nb_project<-length(unique(data$other_identifier_ref))
     nb_country<-length(unique(data$country_iso3_code))
-    nb_budget<-sum(data$budget_usd)
-    nb_funder<-length(unique(data$participating_org_funding))
+    nb_budget<-sum(data$budget_value)
+    nb_sector<-length(unique(data$sector_code))
     output$nb_project<-renderInfoBox({
       infoBox(
         "Number of Projects",
@@ -61,23 +61,23 @@ Summary <- function(input, output, session,data) {
       infoBox(
         "Total Budget",
         paste0(nb_budget,"$"),
-        icon = icon("dollar")
+        icon = icon("dollar-sign")
       )
     })
     
-    output$nb_funder<-renderInfoBox({
+    output$nb_sector<-renderInfoBox({
       infoBox(
-        "Number of Funders",
-        nb_funder,
-        icon = icon("hand-holding-usd")
+        "Number of Activity Sectors",
+        nb_sector,
+        icon = icon("tasks")
       )
     })
 
-    tab<-data[c("region","country_iso3_code","sector_code","language","iati_identifier","title","status")]
+    tab<-data[c("georegion_id","country_iso3_code","sector_code","description_narrative_xml_lang","other_identifier_ref","title_narrative","activity_status_code")]
     names(tab)<-c("Region","Country","Sector","Language","ID","Title","Status")
     
-    data$st_year<-as.integer(substring(data$start_date,1,4))
-    cumul<-ddply(data,.(st_year),summarise,new_project=length(iati_identifier),budget=sum(budget_usd))
+    data$st_year<-as.integer(substring(data$activity_start_date,1,4))
+    cumul<-ddply(data,.(st_year),summarise,new_project=length(other_identifier_ref),budget=sum(budget_value))
     cumul$cumul_new_project<-cumsum(cumul$new_project)
     cumul$cumul_budget<-cumsum(cumul$budget)
     
@@ -94,7 +94,7 @@ Summary <- function(input, output, session,data) {
      labs(x="Year",y="Budget")+
      scale_y_continuous(labels=scales::dollar_format())
    
-   pie<-ddply(data,.(sector_code),summarise,project=length(iati_identifier))
+   pie<-ddply(data,.(sector_code),summarise,project=length(other_identifier_ref))
 
    fig <- plot_ly(pie, labels = ~as.factor(sector_code), values = ~project,type='pie',textinfo = 'none')
    #fig <- fig %>% add_pie(hole = 0.6)
@@ -112,7 +112,7 @@ Summary <- function(input, output, session,data) {
    output$plot2<-renderPlot({plot2})
    output$plot3 <- renderPlotly(fig)
    
-   top<-ddply(data,.(country_iso3_code),summarise,project=length(iati_identifier),budget=sum(budget_usd))
+   top<-ddply(data,.(country_iso3_code),summarise,project=length(other_identifier_ref),budget=sum(budget_value))
    top_p<-top[order(-top$project),]
    top_p<-top[1:10,]
    top_p$rank<-rank(top_p$project,ties.method = "last")
@@ -121,11 +121,11 @@ Summary <- function(input, output, session,data) {
    top_b<-top[1:10,]
    top_b$rank<-rank(top_b$budget,ties.method = "last")
    
-   top_f<-ddply(data,.(participating_org_funding),summarise,budget=sum(budget_usd))
-   top_f<-top_f[order(-top_f$budget),]
-   top_f<-top_f[1:10,]
-   top_f$rank<-rank(top_f$budget,ties.method = "last")
-   top_f$participating_org_funding<-gsub("_"," ",top_f$participating_org_funding)
+   top_s<-ddply(data,.(sector_code),summarise,budget=sum(budget_value))
+   top_s<-top_s[order(-top_s$budget),]
+   top_s<-top_s[1:10,]
+   top_s$rank<-rank(top_s$budget,ties.method = "last")
+   top_s$sector_code<-gsub("_"," ",top_s$sector_code)
 
    top_prog <-  ggplot(top_p,aes(x = rank,y = project, group = country_iso3_code,fill=as.factor(rank))) +
      geom_tile(aes(y = project / 2, height = project), width = 0.9) +
@@ -185,9 +185,9 @@ Summary <- function(input, output, session,data) {
      labs(title='Top 10 Country by Total Budget',
           caption=" Data Source: FAO IATI") 
    
-   top_funder <-  ggplot(top_f,aes(x = rank,y = budget, group = participating_org_funding,fill=as.factor(rank))) +
+   top_sector <-  ggplot(top_s,aes(x = rank,y = budget, group = sector_code,fill=as.factor(rank))) +
      geom_tile(aes(y = budget / 2, height = budget), width = 0.9) +
-     geom_text(aes(y = -50000, label=participating_org_funding), vjust = 0.2, hjust = 1) +
+     geom_text(aes(y = -50000, label=sector_code), vjust = 0.2, hjust = 1) +
      geom_text(aes( y = max(budget)+10,label = paste("$",budget,sep=" ")), hjust = "left", colour = "grey30") +
      coord_flip(clip="off") +
      scale_y_continuous("",labels=scales::comma) +
@@ -211,12 +211,12 @@ Summary <- function(input, output, session,data) {
            plot.caption =element_text(size=9, hjust=0.5, face="italic", color="grey"),
            plot.background=element_blank(),
            plot.margin = margin(1,3, 1, 7, "cm"))+
-     labs(title='Top 10 Funder by Total Budget',
+     labs(title='Top 10 Sector by Total Budget',
           caption=" Data Source: FAO IATI") 
    
    output$plot4<-renderPlot({top_prog})
    output$plot5<-renderPlot({top_budget})
-   output$plot6<-renderPlot({top_funder})
+   output$plot6<-renderPlot({top_sector})
  
  })
 }
